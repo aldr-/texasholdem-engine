@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import com.theaigames.engine.Engine;
 import com.theaigames.engine.Logic;
 import com.theaigames.engine.io.IOPlayer;
+import com.theaigames.game.texasHoldem.match.GameCode;
+import com.theaigames.game.texasHoldem.match.GameType;
 
 import java.lang.Thread;
 
@@ -35,7 +37,7 @@ public class TexasHoldem implements Logic
     
     private final long TIME_PER_MOVE = 500l; 		// time in milliseconds that bots get per move
 	private final long TIMEBANK_MAX = 10000l;		// time bank each bot receives
-	private final int GAME_TYPE = 13;				// no limit Texas Hold 'em, tournament form
+	private final GameCode GAME_TYPE = GameCode.HOLDEM_NO_LIMIT_IS_TOURNAMENT;			// no limit Texas Hold 'em, tournament form
     private final int STARTING_STACK = 500;
     private final int MAX_HANDS = Integer.MAX_VALUE;
     private final int MAX_PLAYERS_LEFT = 1;

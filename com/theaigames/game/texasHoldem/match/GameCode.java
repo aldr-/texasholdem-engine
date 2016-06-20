@@ -1,0 +1,8 @@
+package com.theaigames.game.texasHoldem.match;
+
+public enum GameCode {
+	HOLDEM_NO_LIMIT_IS_TOURNAMENT, 
+	HOLDEM_NO_LIMIT_NOT_A_TOURNAMENT,
+	OMAHA_POT_LIMIT_IS_TOURNAMENT,
+	OMAHA_POT_LIMIT_NOT_A_TOURNAMENT;
+}

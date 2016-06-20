@@ -27,6 +27,9 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import com.stevebrecher.HandEval;
+import com.theaigames.game.texasHoldem.match.GameCode;
+import com.theaigames.game.texasHoldem.match.GameLimit;
+import com.theaigames.game.texasHoldem.match.GameType;
 import com.theaigames.game.texasHoldem.match.MatchInfo;
 import com.theaigames.game.texasHoldem.match.MatchInfoType;
 import com.theaigames.game.texasHoldem.move.PokerMove;
@@ -112,12 +115,9 @@ public class MatchPlayer
 							1000000};
 	
 	// some constructor input dependent constants, with easy human readable possible values
-	private int gameType;							// whether holdem or omaha is played
-	private final int HOLDEM = 0;
-	private final int OMAHA = 1;	
-	private int gameLimit;							// whether no limit or pot limit is played
-	private final int NO_LIMIT = 0;
-	private final int POT_LIMIT = 1;
+	private GameType gameType;							// whether holdem or omaha is played	
+	private GameLimit gameLimit;							// whether no limit or pot limit is played
+
 	
 	private Player winner;
 	private String allHistory = "";
@@ -129,46 +129,37 @@ public class MatchPlayer
 	* @param game : the game that is being played, a code number for the game type.
 	* @param startingStack : the stack size the bots start the game with.
 	*/
-	public MatchPlayer(Collection<Player> players, int game, int startingStack)
+	public MatchPlayer(Collection<Player> players, GameCode gameCode, int startingStack)
 	{
 		// current game and hand information
 		finishedSetup = false;
-		gameCode = game;
 		handNumber = 0;
 		blindLevel = 0;
 		
 		// game type and limit constants
-        switch(gameCode)
-        {
-        case 11:
-        case 12:
-        case 13:
-        	gameType = HOLDEM;
-        	gameLimit = NO_LIMIT;
-        	isTournament = true;
-        	break;
-        case 14:
-        case 15:
-        	gameType = HOLDEM;
-        	gameLimit = NO_LIMIT;
-        	isTournament = false;
-        	break;
-        case 16:
-        case 17:
-        case 18:
-        	gameType = OMAHA;
-        	gameLimit = POT_LIMIT;
-        	isTournament = true;
-        	break;
-        case 19:
-        case 20:
-        	gameType = OMAHA;
-        	gameLimit = POT_LIMIT;
-        	isTournament = false;
-        	break;
-        default:
-        	throw new RuntimeException("QUIT - MatchPlayer invoked with invalid game code: " + gameCode);
-        }
+		switch(gameCode)
+		{
+		case HOLDEM_NO_LIMIT_IS_TOURNAMENT:
+			gameType = GameType.HOLDEM;
+			gameLimit = GameLimit.NO_LIMIT;
+			isTournament = true;
+			break;
+		case HOLDEM_NO_LIMIT_NOT_A_TOURNAMENT:
+			gameType = GameType.HOLDEM;
+			gameLimit = GameLimit.NO_LIMIT;
+			isTournament = false;
+			break;
+		case OMAHA_POT_LIMIT_IS_TOURNAMENT:
+			gameType = GameType.OMAHA;
+			gameLimit = GameLimit.POT_LIMIT;
+			isTournament = true;
+			break;
+		case OMAHA_POT_LIMIT_NOT_A_TOURNAMENT:
+			gameType = GameType.OMAHA;
+			gameLimit = GameLimit.POT_LIMIT;
+			isTournament = false;
+			break;
+		}
         
         // initialize a lot of variables
         tournamentTableRound = 0;
@@ -181,7 +172,8 @@ public class MatchPlayer
 		pot = new Pot(players);
 		round = BetRound.PREFLOP;
 		tableCards = new Vector<Card>();
-		if(gameType == HOLDEM)
+		
+		if(gameType == GameType.HOLDEM)
 			botHands = new HandHoldem[numberOfBots];
 		else
 			botHands = new HandOmaha[numberOfBots];
@@ -848,7 +840,7 @@ public class MatchPlayer
 				}
 				
 				// if there is a limit to the raise size, then check whether the raise is not too large
-				if(gameLimit == POT_LIMIT)
+				if(gameLimit == GameLimit.POT_LIMIT)
 				{
 					// if there is a maximum raise size, then calculate the current maximum
 					sizeMaximalRaise = pot.getTotalPotSize() + amountToCall;
@@ -976,13 +968,13 @@ public class MatchPlayer
 			if(isInvolvedInHand[index])
 			{
 				// take cards from the deck and deal them to the bots, the amount of cards depends on the game type
-				if(gameType == HOLDEM)
+				if(gameType == GameType.HOLDEM)
 				{
 					Card card1 = deck.nextCard();
 					Card card2 = deck.nextCard();
 					botHands[index] = new HandHoldem(card1, card2);
 				}
-				else if(gameType == OMAHA)
+				else if(gameType == GameType.OMAHA)
 				{
 					Card card1 = deck.nextCard();
 					Card card2 = deck.nextCard();
@@ -1193,7 +1185,7 @@ public class MatchPlayer
 			if(isInvolvedInHand[i])
 			{				
 				// calculate the combination strength of the hand, evaluation procedure depends on the game type
-				if(gameType == HOLDEM)
+				if(gameType == GameType.HOLDEM)
 				{
 					// store the hand and table cards together
 					long combinationCode = 0l;
@@ -1209,7 +1201,7 @@ public class MatchPlayer
 				 * computed to find the real hand strength. Maybe not interesting as long as Omaha is not played or
 				 * as long as it is no computational bottleneck.
 				 */
-				else if(gameType == OMAHA)
+				else if(gameType == GameType.OMAHA)
 				{
 					int strength = 0;
 					// loop over all 6 possible combinations of 2 cards out of 4 hand cards
