@@ -54,7 +54,7 @@ public class TexasHoldem implements Logic
 	@Override
 	public void setupGame(ArrayList<IOPlayer> ioPlayers) throws IncorrectPlayerCountException, IOException
 	{
-		System.out.println("setting up game...");
+//		System.out.println("setting up game...");
 		
 		// Determine array size is two players
         if (ioPlayers.size() != 2) {
@@ -65,7 +65,7 @@ public class TexasHoldem implements Logic
         players.add(new Player(playerName2, ioPlayers.get(1), TIMEBANK_MAX, TIME_PER_MOVE));
 		
         // start the match player and send setup info to bots
-        System.out.println("starting game ...");
+//        System.out.println("starting game ...");
 		matchPlayer = new MatchPlayer(players, GAME_TYPE, STARTING_STACK);
 		matchPlayer.finishSetup(true);
 		
@@ -112,7 +112,7 @@ public class TexasHoldem implements Logic
 			e.printStackTrace();
 		}
 		
-		System.out.println("Done.");
+//		System.out.println("Done.");
 		
         System.exit(0);
 	}
@@ -132,12 +132,12 @@ public class TexasHoldem implements Logic
 		IOPlayer bot2 = players.get(1).getBot();
 		
 		if(winner != null) {
-			System.out.println("winner: " + winner.getName());
+//			System.out.println("winner: " + winner.getName());
 		} else {
-			System.out.println("winner: draw");
+//			System.out.println("winner: draw");
 		}
 		
-		System.out.println("Saving the game...");
+//		System.out.println("Saving the game...");
 		
 		// print stuff here... (like the bot dumps)
 	}
