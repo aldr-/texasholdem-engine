@@ -74,6 +74,7 @@ public class MatchPlayer
 	private Vector<Card> tableCards;				// cards that are on the table
 	private Hand[] botHands;						// hand cards of all the bots
 	private String handHistory;						// used to store the match progress
+	private String pokerstarsFormat;				// added to store the match progress as a pokerstars output format
 	private int[] botStacksAtHandStart;				// amount of chips each bot had at the start of the current hand
 	private int[] botStacks;						// amount of chips each bot has currently
 	private int[] botBetsThisRound;					// amount of chips each bot has put in in the current bet round
